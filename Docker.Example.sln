@@ -4,7 +4,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{28446376-227
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{74104140-0635-438F-95AD-3FF40487286E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Docker.Example", "src\Docker.Example\Docker.Example.csproj", "{6FB46772-5A30-406A-B809-0C6F3B7E742C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Docker.Example.Tests.Integration", "tests\Docker.Example.Tests.Integration\Docker.Example.Tests.Integration.csproj", "{9095467F-3173-4D5E-9A8E-2E302698B763}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Docker.Example", "src\Docker.Example\Docker.Example.csproj", "{3DCD028F-4561-41C6-A311-B70EACD2D956}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,12 +14,17 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6FB46772-5A30-406A-B809-0C6F3B7E742C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6FB46772-5A30-406A-B809-0C6F3B7E742C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6FB46772-5A30-406A-B809-0C6F3B7E742C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6FB46772-5A30-406A-B809-0C6F3B7E742C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9095467F-3173-4D5E-9A8E-2E302698B763}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9095467F-3173-4D5E-9A8E-2E302698B763}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9095467F-3173-4D5E-9A8E-2E302698B763}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9095467F-3173-4D5E-9A8E-2E302698B763}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DCD028F-4561-41C6-A311-B70EACD2D956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DCD028F-4561-41C6-A311-B70EACD2D956}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DCD028F-4561-41C6-A311-B70EACD2D956}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DCD028F-4561-41C6-A311-B70EACD2D956}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{6FB46772-5A30-406A-B809-0C6F3B7E742C} = {28446376-227A-4B61-BAA0-69E0E2AE3AF5}
+		{9095467F-3173-4D5E-9A8E-2E302698B763} = {74104140-0635-438F-95AD-3FF40487286E}
+		{3DCD028F-4561-41C6-A311-B70EACD2D956} = {28446376-227A-4B61-BAA0-69E0E2AE3AF5}
 	EndGlobalSection
 EndGlobal
