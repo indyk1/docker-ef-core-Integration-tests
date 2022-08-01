@@ -26,8 +26,8 @@ public class DataSeeder
     {
         var result = await _userManager.CreateAsync(new IdentityUser
         {
-            UserName = "indyisgreat@gmail.com",
-            Email = "indyisgreat@gmail.com"
+            UserName = "test.test@test.com",
+            Email = "test.test@test.com"
         }, "HotChocolate123!");
 
         if (!result.Succeeded)
