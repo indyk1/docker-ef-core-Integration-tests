@@ -1,6 +1,7 @@
+using System.Net;
 using System.Net.Http.Json;
+using AwesomeAssertions;
 using Microsoft.AspNetCore.Identity;
-using Xunit.Abstractions;
 
 namespace Docker.Example.Tests.Integration.Tests;
 
@@ -20,8 +21,13 @@ public class SomeStuff : IClassFixture<SomethingFactory>
     {
         _testOutputHelper.WriteLine("Hello There");
 
-        var value = await _httpClient.GetFromJsonAsync<IdentityUser>("api/Users");
-        
-        Assert.True(true);
+        var response = await _httpClient.GetAsync("api/Users", TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var user = await response.Content.ReadFromJsonAsync<IdentityUser>(TestContext.Current.CancellationToken);
+        user.Should().NotBeNull();
+        user!.Id.Should().NotBeNullOrEmpty();
+        user.Email.Should().Be("test.test@test.com");
+        user.UserName.Should().Be("test.test@test.com");
     }
 }
