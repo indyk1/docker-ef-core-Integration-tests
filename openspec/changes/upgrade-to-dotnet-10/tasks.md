@@ -2,16 +2,16 @@
 
 ## 1. Toolchain
 
-- [ ] 1.1 Install the .NET 10 SDK and `dotnet-ef` 10.x (`dotnet tool update --global dotnet-ef`). Verify: `dotnet --list-sdks` shows a 10.0.x SDK and `dotnet ef --version` reports 10.x
-- [ ] 1.2 Add `global.json` at the repo root with `"sdk": { "version": "10.0.100", "rollForward": "latestFeature" }` (design D2). Verify: `dotnet --version` run from the repo root prints 10.0.x
+- [x] 1.1 Install the .NET 10 SDK and `dotnet-ef` 10.x (`dotnet tool update --global dotnet-ef`). Verify: `dotnet --list-sdks` shows a 10.0.x SDK and `dotnet ef --version` reports 10.x
+- [x] 1.2 Add `global.json` at the repo root with `"sdk": { "version": "10.0.100", "rollForward": "latestFeature" }` (design D2). Verify: `dotnet --version` run from the repo root prints 10.0.x
 
 ## 2. Web app on .NET 10
 
-- [ ] 2.1 In `src/Docker.Example/Docker.Example.csproj`, set `<TargetFramework>net10.0</TargetFramework>`, remove the `Microsoft.EntityFrameworkCore.Sqlite` reference (design D10), and upgrade every remaining `PackageReference` to the target versions in the design.md table (Identity, Diagnostics, EF Core SqlServer/Tools at 10.0.x; Web.CodeGeneration.Design at 10.0.x). Verify: `dotnet restore src/Docker.Example` succeeds and `dotnet list src/Docker.Example package --outdated` shows nothing outdated
-- [ ] 2.2 Remove `public partial class Program { }` from `src/Docker.Example/Program.cs` (design D8). Verify: `dotnet build src/Docker.Example` succeeds with no ASP0027 warning
-- [ ] 2.3 Add `TrustServerCertificate=True` to `ConnectionStrings:DefaultConnection` in `src/Docker.Example/appsettings.json` (design D7). Verify: `dotnet run --project src/Docker.Example` against a local SQL Server container gets through startup with no TLS/certificate error
-- [ ] 2.4 Run `dotnet ef migrations has-pending-model-changes --project src/Docker.Example`. If it reports changes, run `dotnet ef migrations add UpgradeToNet10 --project src/Docker.Example` and check that the migration only touches Identity tables in ways that keep existing data (design D9). Verify: re-running `has-pending-model-changes` reports no changes
-- [ ] 2.5 Fix any remaining compiler or obsolescence warnings that the upgrade introduced in `src/Docker.Example`. Verify: `dotnet build src/Docker.Example -warnaserror` succeeds
+- [x] 2.1 In `src/Docker.Example/Docker.Example.csproj`, set `<TargetFramework>net10.0</TargetFramework>`, remove the `Microsoft.EntityFrameworkCore.Sqlite` reference (design D10), and upgrade every remaining `PackageReference` to the target versions in the design.md table (Identity, Diagnostics, EF Core SqlServer/Tools at 10.0.x; Web.CodeGeneration.Design at 10.0.x). Verify: `dotnet restore src/Docker.Example` succeeds and `dotnet list src/Docker.Example package --outdated` shows nothing outdated
+- [x] 2.2 Remove `public partial class Program { }` from `src/Docker.Example/Program.cs` (design D8). Verify: `dotnet build src/Docker.Example` succeeds with no ASP0027 warning
+- [x] 2.3 Add `TrustServerCertificate=True` to `ConnectionStrings:DefaultConnection` in `src/Docker.Example/appsettings.json` (design D7). Verify: `dotnet run --project src/Docker.Example` against a local SQL Server container gets through startup with no TLS/certificate error
+- [x] 2.4 Run `dotnet ef migrations has-pending-model-changes --project src/Docker.Example`. If it reports changes, run `dotnet ef migrations add UpgradeToNet10 --project src/Docker.Example` and check that the migration only touches Identity tables in ways that keep existing data (design D9). Verify: re-running `has-pending-model-changes` reports no changes
+- [x] 2.5 Fix any remaining compiler or obsolescence warnings that the upgrade introduced in `src/Docker.Example`. Verify: `dotnet build src/Docker.Example -warnaserror` succeeds
 
 ## 3. Integration test harness on .NET 10
 

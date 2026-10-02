@@ -49,5 +49,3 @@ var seeder = scopedServices.GetRequiredService<DataSeeder>();
 seeder.SeedData().GetAwaiter().GetResult();
 
 app.Run();
-
-public partial class Program { }

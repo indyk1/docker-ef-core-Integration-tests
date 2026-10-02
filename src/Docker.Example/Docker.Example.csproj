@@ -1,20 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-Docker.Example-DAA34A88-3FC4-4A20-864B-5675BD354801</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.5" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.5" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.7" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5" />
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.12" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.12" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.12" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.12" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
+    </ItemGroup>
+
+    <!-- Pin patched versions of NuGet client packages pulled in transitively by
+         Microsoft.VisualStudio.Web.CodeGeneration.Design (GHSA-g4vj-cjjj-v7hg in 6.12.1). -->
+    <ItemGroup>
+        <PackageReference Include="NuGet.Packaging" Version="6.12.5" />
+        <PackageReference Include="NuGet.Protocol" Version="6.12.5" />
     </ItemGroup>
 
     <ItemGroup>

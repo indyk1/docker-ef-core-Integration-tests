@@ -16,7 +16,7 @@ namespace Docker.Example.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<IdentityUser> Get()
+        public async Task<IdentityUser?> Get()
         {
             return await _userManager.FindByEmailAsync("test.test@test.com");
         }
