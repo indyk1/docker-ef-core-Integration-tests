@@ -8,8 +8,9 @@ The solution targets .NET 6, which went out of support in November 2024, and its
 
 - Change `TargetFramework` from `net6.0` to `net10.0` in both projects (`Docker.Example`, `Docker.Example.Tests.Integration`).
 - Add a `global.json` that pins the .NET 10 SDK so local and CI builds use the same toolchain.
-- Upgrade the ASP.NET Core and EF Core packages to 10.0.x: Identity.EntityFrameworkCore, Identity.UI, Diagnostics.EntityFrameworkCore, EntityFrameworkCore.SqlServer, EntityFrameworkCore.Sqlite, EntityFrameworkCore.Tools, Mvc.Testing and Web.CodeGeneration.Design.
-- Upgrade the test tooling: Microsoft.NET.Test.Sdk 18.x, coverlet.collector 10.x and NSubstitute 6.x.
+- Upgrade the ASP.NET Core and EF Core packages to 10.0.x: Identity.EntityFrameworkCore, Identity.UI, Diagnostics.EntityFrameworkCore, EntityFrameworkCore.SqlServer, EntityFrameworkCore.Tools, Mvc.Testing and Web.CodeGeneration.Design.
+- Upgrade the test tooling: Microsoft.NET.Test.Sdk 18.x and coverlet.collector 10.x.
+- Remove the unused `Microsoft.EntityFrameworkCore.Sqlite` (app) and `NSubstitute` (tests) package references. No code references either one.
 - **BREAKING (tests only)**: Move from xUnit v2 (`xunit` 2.4.1) to xUnit v3 (`xunit.v3`). The `IAsyncLifetime` method signatures change to return `ValueTask`, and `ITestOutputHelper` moves to a different namespace.
 - **BREAKING (tests only)**: Upgrade Testcontainers from 2.1.0 to 4.x and switch to the `Testcontainers.MsSql` module. `TestcontainersBuilder<TestcontainersContainer>` is replaced by `MsSqlBuilder`. The container gets a random host port, and the tests read its connection string from the container instead of using a hard-coded value.
 - Replace FluentAssertions with AwesomeAssertions. FluentAssertions 8.x requires a paid commercial licence. AwesomeAssertions is the Apache-2.0 fork with a compatible API.
@@ -31,6 +32,7 @@ The solution targets .NET 6, which went out of support in November 2024, and its
 ## Impact
 
 - **Code**: Both `.csproj` files, `src/Docker.Example/Program.cs` (the explicit `public partial class Program` is redundant in .NET 10), `src/Docker.Example/appsettings.json`, `src/Docker.Example/Migrations/*`, `tests/.../SomethingFactory.cs` and `tests/.../Tests/SomeStuff.cs`.
+- **Dependencies**: Two packages are removed (`Microsoft.EntityFrameworkCore.Sqlite`, `NSubstitute`).
 - **Tooling**: Contributors and CI need the .NET 10 SDK, and `dotnet-ef` must be on 10.x to create migrations. Running the tests still requires Docker.
 - **Runtime behaviour**: The public behaviour of the web app and `api/Users` is intended to stay the same. The Identity database schema only changes if EF Core 10 reports pending model changes.
 - **Licensing**: Removing FluentAssertions avoids the Xceed commercial licence that versions 8.0 and later require.

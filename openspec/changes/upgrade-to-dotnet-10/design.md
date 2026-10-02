@@ -17,7 +17,7 @@ Latest stable versions on nuget.org, checked 2026-10-02:
 | Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore | 6.0.5 | 10.0.12 |
 | Microsoft.AspNetCore.Identity.EntityFrameworkCore | 6.0.5 | 10.0.12 |
 | Microsoft.AspNetCore.Identity.UI | 6.0.5 | 10.0.12 |
-| Microsoft.EntityFrameworkCore.Sqlite | 6.0.5 | 10.0.12 |
+| Microsoft.EntityFrameworkCore.Sqlite | 6.0.5 | removed (unused) |
 | Microsoft.EntityFrameworkCore.SqlServer | 6.0.7 | 10.0.12 |
 | Microsoft.EntityFrameworkCore.Tools | 6.0.5 | 10.0.12 |
 | Microsoft.VisualStudio.Web.CodeGeneration.Design | 6.0.7 | 10.0.2 |
@@ -27,7 +27,7 @@ Latest stable versions on nuget.org, checked 2026-10-02:
 | xunit | 2.4.1 | replaced by xunit.v3 4.0.1 |
 | xunit.runner.visualstudio | 2.4.3 | 4.0.0 |
 | FluentAssertions | 6.7.0 | replaced by AwesomeAssertions 9.6.0 |
-| NSubstitute | 4.4.0 | 6.2.0 |
+| NSubstitute | 4.4.0 | removed (unused) |
 | coverlet.collector | 3.1.2 | 10.1.0 |
 
 Run `dotnet list package --outdated` again when implementing and use the newest patch versions at that point.
@@ -72,6 +72,8 @@ EF Core 7 and later bring Microsoft.Data.SqlClient 5+, which defaults to `Encryp
 
 ### D9: Bring migrations in line with EF Core 10
 From EF Core 9, `Migrate()` throws if the model differs from the latest snapshot (`PendingModelChangesWarning`). After the upgrade, run `dotnet ef migrations has-pending-model-changes`. If it reports changes, for example from Identity 10 model defaults, add a migration (`UpgradeToNet10`) rather than editing `InitialCreate`, so existing databases can upgrade in place. If it reports none, keep the existing migrations; EF updates the snapshot's `ProductVersion` the next time a migration is added.
+### D10: Remove unused packages instead of upgrading them
+No code uses `Microsoft.EntityFrameworkCore.Sqlite` (the app only calls `UseSqlServer`) or `NSubstitute` (the tests use no mocks). Upgrading them would mean extra restore work, more transitive dependencies and more vulnerability surface for no benefit. Remove both references, and add them back if a future change needs SQLite or mocking. *Alternative:* upgrade both to their latest versions, rejected because they would be dead dependencies.
 
 ## Risks / Trade-offs
 
@@ -84,7 +86,3 @@ From EF Core 9, `Migrate()` throws if the model differs from the latest snapshot
 ## Migration Plan
 
 All work happens on a branch and is merged once `dotnet build` and `dotnet test` pass on .NET 10. To roll back, revert the merge. The only lasting state change is an optional new EF migration; if one was added and applied to a real database, roll back with `dotnet ef database update InitialCreate`.
-
-## Open Questions
-
-- Should the unused `Microsoft.EntityFrameworkCore.Sqlite` and `NSubstitute` references be removed rather than upgraded? This plan upgrades them so it stays a pure upgrade. Removing them is a one-line change per package that can be decided during review.
