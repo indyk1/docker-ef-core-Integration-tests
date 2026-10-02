@@ -23,6 +23,6 @@
 
 ## 4. Integration checks
 
-- [ ] 4.1 From a clean clone, run `dotnet build Docker.Example.sln -warnaserror` and `dotnet list package --vulnerable --include-transitive`. Verify: the build succeeds and no vulnerable packages are reported (spec: "Clean build")
-- [ ] 4.2 Start an unrelated SQL Server container on host port 1433, then run `dotnet test`. Verify: the tests pass, and `docker ps -a` afterwards shows no leftover test container (spec: "Local SQL Server already running", "Container lifecycle")
-- [ ] 4.3 Run `openspec validate upgrade-to-dotnet-10 --strict`. Verify: it reports the change as valid
+- [x] 4.1 From a clean clone, run `dotnet build Docker.Example.sln -warnaserror` and `dotnet list package --vulnerable --include-transitive`. Verify: the build succeeds and no vulnerable packages are reported (spec: "Clean build")
+- [x] 4.2 Start an unrelated SQL Server container on host port 1433, then run `dotnet test`. Verify: the tests pass, and `docker ps -a` afterwards shows no leftover test container (spec: "Local SQL Server already running", "Container lifecycle")
+- [x] 4.3 Run `openspec validate upgrade-to-dotnet-10 --strict`. Verify: it reports the change as valid

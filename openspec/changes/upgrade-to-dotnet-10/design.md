@@ -24,11 +24,12 @@ Latest stable versions on nuget.org, checked 2026-10-02:
 | Microsoft.AspNetCore.Mvc.Testing | 6.0.7 | 10.0.12 |
 | Microsoft.NET.Test.Sdk | 17.1.0 | 18.10.1 |
 | Testcontainers | 2.1.0 | replaced by Testcontainers.MsSql 4.15.0 |
-| xunit | 2.4.1 | replaced by xunit.v3 4.0.1 |
+| xunit | 2.4.1 | replaced by xunit.v3.mtp-off 4.0.1 (see D5) |
 | xunit.runner.visualstudio | 2.4.3 | 4.0.0 |
 | FluentAssertions | 6.7.0 | replaced by AwesomeAssertions 9.6.0 |
 | NSubstitute | 4.4.0 | removed (unused) |
 | coverlet.collector | 3.1.2 | 10.1.0 |
+| NuGet.Packaging / NuGet.Protocol (transitive) | 6.12.1 | pinned to 6.12.5 (see D11) |
 
 Run `dotnet list package --outdated` again when implementing and use the newest patch versions at that point.
 
@@ -59,7 +60,9 @@ Use `"version": "10.0.100", "rollForward": "latestFeature"` so any 10.0.x SDK wo
 From EF Core 9, `AddDbContext` also registers `IDbContextOptionsConfiguration<T>`. Removing only `DbContextOptions<T>` therefore leaves the original `UseSqlServer(appsettings)` configuration in place, and the second `AddDbContext` stacks on top of it. Instead, override `ConnectionStrings:DefaultConnection` with `builder.UseSetting(...)` in `ConfigureWebHost`, so `Program.cs` reads the container's connection string as usual. *Fallback:* if `UseSetting` is applied too late for the minimal-hosting `builder.Configuration` read, use `services.RemoveAll<IDbContextOptionsConfiguration<ApplicationDbContext>>()` and `services.RemoveAll<DbContextOptions<ApplicationDbContext>>()`, then `AddDbContext` again.
 
 ### D5: Use xUnit v3 rather than staying on v2
-xUnit v2 is in maintenance only. In v3, `IAsyncLifetime` extends `IAsyncDisposable` and its methods return `ValueTask`, which lines up with `WebApplicationFactory.DisposeAsync()`. That lets the factory `override` `DisposeAsync` (stop the container, then call `base.DisposeAsync()`) and the `#pragma` can be deleted. Migration steps: switch the package to `xunit.v3`, add `<OutputType>Exe</OutputType>`, change `using Xunit.Abstractions` to `using Xunit`, and switch `ValueTask`s. *Alternative:* `xunit` 2.9.3 with the newest runner that still supports v2, rejected because v2 will not get new features.
+xUnit v2 is in maintenance only. In v3, `IAsyncLifetime` extends `IAsyncDisposable` and its methods return `ValueTask`, which lines up with `WebApplicationFactory.DisposeAsync()`. That lets the factory `override` `DisposeAsync` (stop the container, then call `base.DisposeAsync()`) and the `#pragma` can be deleted. Migration steps: switch the package to `xunit.v3`, add `<OutputType>Exe</OutputType>`, change `using Xunit.Abstractions` to `using Xunit`, and switch `ValueTask`s.
+
+*Found during implementation:* `xunit.v3` 4.x runs on Microsoft Testing Platform by default, and on the .NET 10 SDK `dotnet test` refuses to run an MTP project through VSTest. Use the `xunit.v3.mtp-off` package instead: it is the same xUnit v3 framework, run through VSTest, so `Microsoft.NET.Test.Sdk`, `xunit.runner.visualstudio` and `coverlet.collector` keep working without changes. Moving to MTP (a `"test": { "runner": "Microsoft.Testing.Platform" }` entry in `global.json` and an MTP coverage extension) can be a follow-up. *Alternative:* `xunit` 2.9.3 with the newest runner that still supports v2, rejected because v2 will not get new features.
 
 ### D6: Use AwesomeAssertions instead of FluentAssertions 8
 FluentAssertions 8.0 and later require a paid Xceed licence for commercial use. AwesomeAssertions is a community fork under Apache-2.0 with a matching API (namespace `AwesomeAssertions`). Use it to replace `Assert.True(true)` with assertions on the returned user. *Alternatives:* pin FluentAssertions 7.x (the last free version, which will not get further updates), or use plain xUnit `Assert` and drop the package.
@@ -74,6 +77,9 @@ EF Core 7 and later bring Microsoft.Data.SqlClient 5+, which defaults to `Encryp
 From EF Core 9, `Migrate()` throws if the model differs from the latest snapshot (`PendingModelChangesWarning`). After the upgrade, run `dotnet ef migrations has-pending-model-changes`. If it reports changes, for example from Identity 10 model defaults, add a migration (`UpgradeToNet10`) rather than editing `InitialCreate`, so existing databases can upgrade in place. If it reports none, keep the existing migrations; EF updates the snapshot's `ProductVersion` the next time a migration is added.
 ### D10: Remove unused packages instead of upgrading them
 No code uses `Microsoft.EntityFrameworkCore.Sqlite` (the app only calls `UseSqlServer`) or `NSubstitute` (the tests use no mocks). Upgrading them would mean extra restore work, more transitive dependencies and more vulnerability surface for no benefit. Remove both references, and add them back if a future change needs SQLite or mocking. *Alternative:* upgrade both to their latest versions, rejected because they would be dead dependencies.
+
+### D11: Pin patched NuGet client packages
+*Found during implementation:* `Microsoft.VisualStudio.Web.CodeGeneration.Design` 10.0.2, the latest version, still depends on `NuGet.Packaging`/`NuGet.Protocol` 6.12.1, which have a known low-severity vulnerability (GHSA-g4vj-cjjj-v7hg). That fails the "no vulnerable packages" check. Add direct references to the patched 6.12.5 versions in the app project. Remove them once a newer CodeGeneration.Design pulls in a fixed version. *Alternative:* drop CodeGeneration.Design (it is only used for `dotnet aspnet-codegenerator` scaffolding), rejected because the request was to keep and upgrade packages, not remove tooling.
 
 ## Risks / Trade-offs
 
