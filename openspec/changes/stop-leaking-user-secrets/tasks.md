@@ -11,4 +11,4 @@
 
 ## 3. Integration checks
 
-- [ ] 3.1 Run `dotnet build Docker.Example.sln -warnaserror`, `dotnet test` and `openspec validate stop-leaking-user-secrets --strict` from a clean clone. Verify: all three succeed
+- [x] 3.1 Run `dotnet build Docker.Example.sln -warnaserror`, `dotnet test` and `openspec validate stop-leaking-user-secrets --strict` from a clean clone. Verify: all three succeed
