@@ -1,3 +1,4 @@
+using Docker.Example.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +17,10 @@ namespace Docker.Example.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<IdentityUser?> Get()
+        public async Task<UserResponse?> Get()
         {
-            return await _userManager.FindByEmailAsync("test.test@test.com");
+            var user = await _userManager.FindByEmailAsync("test.test@test.com");
+            return user is null ? null : new UserResponse(user.Id, user.UserName, user.Email);
         }
 
         // GET: api/Users/5

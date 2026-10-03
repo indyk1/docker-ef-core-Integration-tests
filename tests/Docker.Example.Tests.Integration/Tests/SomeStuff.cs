@@ -1,7 +1,6 @@
 using System.Net;
-using System.Net.Http.Json;
+using System.Text.Json;
 using AwesomeAssertions;
-using Microsoft.AspNetCore.Identity;
 
 namespace Docker.Example.Tests.Integration.Tests;
 
@@ -24,10 +23,14 @@ public class SomeStuff : IClassFixture<SomethingFactory>
         var response = await _httpClient.GetAsync("api/Users", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var user = await response.Content.ReadFromJsonAsync<IdentityUser>(TestContext.Current.CancellationToken);
-        user.Should().NotBeNull();
-        user!.Id.Should().NotBeNullOrEmpty();
-        user.Email.Should().Be("test.test@test.com");
-        user.UserName.Should().Be("test.test@test.com");
+        var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        using var document = JsonDocument.Parse(body);
+        var root = document.RootElement;
+
+        root.ValueKind.Should().Be(JsonValueKind.Object);
+        root.EnumerateObject().Select(p => p.Name).Should().BeEquivalentTo("id", "userName", "email");
+        root.GetProperty("email").GetString().Should().Be("test.test@test.com");
+        root.GetProperty("userName").GetString().Should().Be("test.test@test.com");
+        root.GetProperty("id").GetString().Should().NotBeNullOrEmpty();
     }
 }
